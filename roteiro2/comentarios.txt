@@ -26,4 +26,36 @@ Em seguida a nova restrição foi criada:
 -> ALTER TABLE tarefas ADD CONSTRAINT prioridade_chk2 CHECK (prioridade in (0,1,2,3,4,5));
 
 Questão 8:
-Dificuldades em conectar funcionário LIMPEZA com funcionário SUP_LIMPEZA
+Dificuldades em inserir funcionário LIMPEZA e funcionário SUP_LIMPEZA
+
+Questão 9:
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'12345678932', '1980-04-09', 'joao da SIlva', 'SUP_LIMPEZA', 'J', '12345678911');
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'12345678932', '1980-04-09', 'joao da SIlva', null, 'L', '12345678911');
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'12345678932', '1980-04-09', 'joao da SIlva', 'SUP_LIMPEZA', 'J', '12345678911');
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'1234567893213', '1980-04-09', 'joao da SIlva', 'SUP_LIMPEZA', 'J', null);
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'12345678932', '1980-04-09', 'joao da SIlva', 'SUP_LIMPEZA', 'J', '12345678932');
+
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'12345678932', '1980-04-09', 'joao da SIlva', 'LIMPEZA', 'J', '12345678932');
+
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'12345678932', '1980-04-09', 'joao da SIlva', 'SUP_LIMPEZA', 'J', '12345678932');
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+'12345678932', null, 'joao da SIlva', 'SUP_LIMPEZA', 'J', '12345678932');
+
+INSERT INTO funcionario (cpf, data_nasc, nome, funcao, nivel, superior_cpf) VALUES(
+null, '1980-04-09', 'joao da SIlva', 'SUP_LIMPEZA', 'J', '12345678932');
+

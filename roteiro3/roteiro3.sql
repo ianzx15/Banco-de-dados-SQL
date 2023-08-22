@@ -9,24 +9,22 @@ CREATE TABLE farmacias(
         bairro VARCHAR(50) UNIQUE,
         cidade VARCHAR(50),
         estado ESTADOS,
-        id_funcionario INTEGER REFERENCES funcionarios (isGerente),
-        EXCLUDE USING gist(
-            isGerente with=) WHERE (isGerente = TRUE)
+        id_funcionario INTEGER,
+        profissao_funcionario PROFISSAO,
+        CONSTRAINT fk_gerente FOREIGN KEY (profissao_funcionario, id_funcionario)
+        REFERENCES funcionarios (profissao, id_funcionario)
         );
     
 CREATE TABLE funcionarios(
     id_farmacia INTEGER REFERENCES farmacias (id_farmacia),
-    id_funcionario INTEGER,
-    profissao PROFISSAO,
-    isGerente BOOLEAN CHECK (isGerente = TRUE AND isGerente IN ('FA','AD'))
+    id_funcionario INTEGER PRIMARY KEY,
+    profissao PROFISSAO
 );
 
 CREATE TABLE clientes(
     cpf_cliente VARCHAR(11) CHECK(char_length (cpf_cliente) = 11) PRIMARY KEY,
     nascimento DATE,
-    conta_valida BOOLEAN,
-    CHECK (idade >= 18 AND conta_valida = TRUE),
-    DATE_PART (year, nascimento) AS idade,
+    CHECK (date_part('year', current_date) - date_part('year', nascimento) >= 18),
     cep_endereco REFERENCES enderecos (cep_endereco)
 
 );
@@ -40,7 +38,7 @@ CREATE TABLE enderecos(
 
 CREATE TABLE medicamentos(
     id_medicamento INTEGER,
-    com_receita BOOLEAN
+    com_receita CHAR(1) CHECK(com_receita IN ('S', 'N'))
 
 );
 
@@ -54,20 +52,10 @@ CREATE TABLE entregas(
 
 CREATE TABLE vendas(
     id_funcionario INTEGER REFERENCES funcionarios (id_funcionario),
-    id_medicamento INTEGER REFERENCES medicamentos (id_medicamento),
-    valor NUMERIC
+    id_medicamento INTEGER,
+    cpf_cliente VARCHAR(11) REFERENCES clientes (cpf_cliente),
+    com_receita CHAR(1) CHECK(com_receita IN ('S', 'N')),    
+    valor NUMERIC,
+    CHECK (com_receita = 'S' AND cpf_cliente IS NOT NULL),
+    CONSTRAINT fk_venda FOREIGN KEY (id_medicamento, com_receita) REFERENCES medicamentos (id_medicamento, com_receita)
 );
-
-CREATE TABLE teste(
-    alg1 TEXT PRIMARY KEY,
-    al2 TEXT
-);
-
-CREATE TABLE teste2(
-    alg1 TEXT REFERENCES teste (alg1),
-    al2 TEXT
-);
-
-//COMO CALCULAR A IDADE???
-//COMO IDENTIFICAR NA CLASSE FARMACIA SE UM FUNCIONARIO É isGerente
-//COMO IDENTIFICAR QUE O CLIENTE ESTÁ CADASTRADO PARA VENDER O REMEDIO COM VENDA EXCLUSIVA

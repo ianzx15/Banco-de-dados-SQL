@@ -43,8 +43,11 @@ ON e.ssn = w.Essn
 GROUP BY e.ssn ORDER BY qtd_proj;
 
 ---12:
-SELECT p.Pnumber AS num_proj, COUNT(e.ssn) AS qtd_func 
-FROM project p, works_on w FULL OUTER JOIN employee e
-WHERE p.Pnumber = w.Pno AND e.ssn = w.Essn
-GROUP BY p.Pnumber HAVING COUNT(e.ssn) < 5 
+SELECT w.Pno AS num_proj, COUNT(e.ssn) AS qtd_func 
+FROM works_on w RIGHT OUTER JOIN employee e
+ON e.ssn = w.Essn
+GROUP BY w.Pno HAVING COUNT(e.ssn) < 5 
 ORDER BY COUNT(e.ssn);
+
+---13:
+SELECT d.dname FROM department d, project p WHERE 

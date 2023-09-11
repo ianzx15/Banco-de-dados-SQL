@@ -53,7 +53,7 @@ GROUP BY w.Pno HAVING COUNT(e.ssn) < 5
 ORDER BY COUNT(e.ssn);
 
 ---13:
-
+SELECT e.fname FROM employee e WHERE e.ssn IN (SELECT * FROM works_on w WHERE w.essn = e.ssn);
 
 ---14:
 SELECT d.dname FROM department d 
@@ -62,5 +62,8 @@ WHERE d.dnumber = p.dnum);
 
 ---15:
 SELECT e.fname, e.lname FROM employee e, works_on r
-WHERE e.ssn = r.essn AND r.pno = ALL (SELECT w.pno FROM works_on w
-WHERE w.essn = '123456789' );
+WHERE e.ssn = r.essn AND r.pno IN (SELECT w.pno AS result FROM works_on w
+WHERE w.essn = '123456789') 
+GROUP BY e.fname, e.lname;
+
+

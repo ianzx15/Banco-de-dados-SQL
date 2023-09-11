@@ -22,9 +22,9 @@ WHERE e.ssn = w.Essn AND p.Pnumber = w.Pno GROUP BY p.Pname )
 as T;
 
 ---7:
--- SELECT r.Pnumber as num_projeto, MIN(result) AS qtd FROM project r, (SELECT COUNT(e.ssn) AS result FROM employee e, works_on w, project p
--- WHERE e.ssn = w.Essn AND p.Pnumber = w.Pno GROUP BY p.Pname)
--- as T GROUP BY r.Pnumber;
+SELECT w.Pno AS num_projeto, COUNT(*) AS qtd_func FROM works_on w 
+GROUP BY w.Pno HAVING COUNT(*) <= ALL (SELECT COUNT(*) 
+FROM works_on w GROUP BY w.Pno);
 
 ---8:
 SELECT p.Pnumber AS num_proj, AVG(e.salary) AS media_sal FROM employee e, project p, works_on w
@@ -35,7 +35,10 @@ SELECT p.Pnumber AS proj_num, p.pname AS proj_nome, AVG(e.salary) FROM employee 
 WHERE e.ssn = w.Essn AND w.Pno = p.Pnumber GROUP BY p.Pnumber, p.pname;
 
 ---10:
-
+SELECT e.fname FROM employee e LEFT OUTER JOIN works_on w 
+ON e.ssn = w.Essn AND w.Pno <> 92 
+WHERE e.salary > (SELECT MAX(e.salary) FROM employee e, works_on w 
+WHERE e.ssn = w.Essn AND w.Pno = 92);
 
 ---11:
 SELECT e.ssn, COUNT(w.Essn) AS qtd_proj FROM employee e FULL OUTER JOIN works_on w
@@ -50,4 +53,14 @@ GROUP BY w.Pno HAVING COUNT(e.ssn) < 5
 ORDER BY COUNT(e.ssn);
 
 ---13:
-SELECT d.dname FROM department d, project p WHERE 
+
+
+---14:
+SELECT d.dname FROM department d 
+WHERE NOT EXISTS (SELECT p.dnum FROM project p  
+WHERE d.dnumber = p.dnum);
+
+---15:
+SELECT e.fname, e.lname FROM employee e, works_on r
+WHERE e.ssn = r.essn AND r.pno = ALL (SELECT w.pno FROM works_on w
+WHERE w.essn = '123456789' );

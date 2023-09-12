@@ -53,8 +53,11 @@ GROUP BY w.Pno HAVING COUNT(e.ssn) < 5
 ORDER BY COUNT(e.ssn);
 
 ---13:
-SELECT e.fname FROM employee e WHERE e.ssn IN (SELECT * FROM works_on w WHERE w.essn = e.ssn);
-
+SELECT e.fname FROM employee e 
+WHERE e.ssn IN (SELECT f.essn FROM dependent f
+WHERE f.essn IN (SELECT w.essn FROM works_on w 
+WHERE w.pno IN (SELECT p.pnumber FROM project p
+WHERE p.plocation = 'Sugarland' )));
 ---14:
 SELECT d.dname FROM department d 
 WHERE NOT EXISTS (SELECT p.dnum FROM project p  
@@ -62,8 +65,9 @@ WHERE d.dnumber = p.dnum);
 
 ---15:
 SELECT e.fname, e.lname FROM employee e, works_on r
-WHERE e.ssn = r.essn AND r.pno IN (SELECT w.pno AS result FROM works_on w
+WHERE e.ssn = r.essn AND r.pno IN (SELECT w.pno FROM works_on w
 WHERE w.essn = '123456789') 
-GROUP BY e.fname, e.lname;
+GROUP BY e.fname, e.lname, r.essn HAVING COUNT(r.essn) = (SELECT COUNT(s.pno)
+FROM works_on s WHERE s.essn = '123456789') AND r.essn <> '123456789';
 
 

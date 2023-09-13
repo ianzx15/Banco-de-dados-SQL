@@ -4,12 +4,11 @@ SELECT COUNT(*) FROM employee e WHERE e.sex = 'F';
 SELECT AVG(e.salary) FROM employee e WHERE e.sex = 'M' AND e.address LIKE '%TX%';
 ---3:
 SELECT e.superssn AS ssn_supervisor, COUNT(e.ssn) AS qtd_supervisionados 
-FROM employee e LEFT OUTER JOIN employee s 
-ON s.ssn = e.superssn 
+FROM employee e
 GROUP BY e.superssn ORDER BY qtd_supervisionados;
 ---4:
 SELECT s.fname AS nome_supervisor, COUNT(e.ssn) AS qtd_supervisionados 
-FROM employee e INNER JOIN employee s ON s.ssn = e.superssn
+FROM employee e JOIN employee s ON s.ssn = e.superssn
 GROUP BY nome_supervisor
 ORDER BY qtd_supervisionados;
 ---5:
@@ -41,7 +40,7 @@ WHERE e.salary > (SELECT MAX(e.salary) FROM employee e, works_on w
 WHERE e.ssn = w.Essn AND w.Pno = 92);
 
 ---11:
-SELECT e.ssn, COUNT(w.Essn) AS qtd_proj FROM employee e FULL OUTER JOIN works_on w
+SELECT e.ssn, COUNT(w.Essn) AS qtd_proj FROM employee e LEFT JOIN works_on w
 ON e.ssn = w.Essn
 GROUP BY e.ssn ORDER BY qtd_proj;
 
@@ -66,8 +65,24 @@ WHERE d.dnumber = p.dnum);
 ---15:
 SELECT e.fname, e.lname FROM employee e, works_on r
 WHERE e.ssn = r.essn AND r.pno IN (SELECT w.pno FROM works_on w
-WHERE w.essn = '123456789') 
+WHERE w.essn = '123456789')  AND r.essn <> '123456789'
 GROUP BY e.fname, e.lname, r.essn HAVING COUNT(r.essn) = (SELECT COUNT(s.pno)
-FROM works_on s WHERE s.essn = '123456789') AND r.essn <> '123456789';
+FROM works_on s WHERE s.essn = '123456789');
 
 
+LEMBRAR!!!!!!!!!!
+
+-- usou FROM (SELECT...) é necessário ter um  AS T no final
+SELECT MIN(result) FROM (SELECT COUNT(w.essn) AS result FROM works_on w
+GROUP BY w.pno) AS T;
+
+
+-- USOU HAVING COUNT(coluna) então a coluna tem que estar no group by
+GROUP BY e.fname, e.lname, r.essn HAVING COUNT(r.essn) = (SELECT COUNT(s.pno)
+
+
+-- USAR ALL, EXISTS, NOT EXISTS, <= ALL, IN, = ANY, NOT IN
+
+SELECT w.pno AS num_proj, COUNT(w.essn) FROM works_on w
+GROUP BY w.pno HAVING COUNT(w.essn) <= ALL(SELECT COUNT(a.essn)
+FROM works_on a GROUP BY a.pno);

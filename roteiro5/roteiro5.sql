@@ -69,9 +69,6 @@ WHERE w.essn = '123456789')  AND r.essn <> '123456789'
 GROUP BY e.fname, e.lname, r.essn HAVING COUNT(r.essn) = (SELECT COUNT(s.pno)
 FROM works_on s WHERE s.essn = '123456789');
 
-
-LEMBRAR!!!!!!!!!!
-
 -- usou FROM (SELECT...) é necessário ter um  AS T no final
 SELECT MIN(result) FROM (SELECT COUNT(w.essn) AS result FROM works_on w
 GROUP BY w.pno) AS T;

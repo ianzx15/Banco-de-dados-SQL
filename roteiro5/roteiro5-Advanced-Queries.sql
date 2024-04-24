@@ -1,4 +1,5 @@
 ---1:
+
 SELECT COUNT(*) FROM employee e WHERE e.sex = 'F';
 ---2:
 SELECT AVG(e.salary) FROM employee e WHERE e.sex = 'M' AND e.address LIKE '%TX%';
